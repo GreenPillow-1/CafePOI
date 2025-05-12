@@ -13,7 +13,7 @@ export default function RootLayout() {
   });
 
   if (!loaded) {
-    // Async font loading only occurs in development.
+    // Async font loading ony occurs in development.
     return null;
   }
 
