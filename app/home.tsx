@@ -105,6 +105,8 @@ export default function Home() {
           style={styles.searchInput}
           placeholder="Search Café or Restaurant..."
           value={searchQuery}
+          placeholderTextColor="#000" 
+
           onChangeText={setSearchQuery}
         />
 
@@ -187,6 +189,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 5,
     backgroundColor: '#fff',
+    
   },
   dropdown: {
     backgroundColor: '#fff',
