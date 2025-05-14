@@ -49,7 +49,7 @@ export default function Home() {
       {/* Search Input */}
       <TextInput
         style={styles.searchInput}
-        placeholder="Search Café..."
+        placeholder="Search Café or Restaurant..."
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
@@ -70,7 +70,12 @@ export default function Home() {
               key={index}
               coordinate={offsetLatLng(cafe.latitude, cafe.longitude, index)}
               title={cafe.name}
+              // image = {require ('../assets/icon/street-cafe.png')}
             >
+              <View style ={{alignItems: 'center'}}>
+                <Text style ={{fontSize: 30}}> ☕️ </Text>
+              </View>
+
               <Callout>
                 <View style={{ width: 200 }}>
                   <Text style={{ fontWeight: 'bold' }}>{cafe.name}</Text>
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 100,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#D6CABA',
     alignItems: 'center',
   },
   title: {
@@ -103,8 +108,8 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    width: '90%',
-    borderColor: '#ddd',
+    width: '100%',
+    borderColor: '#E0D3C0',
     borderWidth: 1,
     paddingLeft: 10,
 borderRadius: 10,
@@ -117,10 +122,10 @@ borderRadius: 20,
 overflow: 'hidden',
 backgroundColor: '#eee',
 shadowColor: '#000',
-shadowOpacity: 0.1,
+shadowOpacity: 0.05,
 shadowOffset: { width: 0, height: 3 },
-shadowRadius: 6,
-elevation: 4,
+shadowRadius: 4,
+elevation: 2,
 marginBottom: 40,
 },
 map: {
