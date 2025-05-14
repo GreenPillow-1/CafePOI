@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "A",
+    "latitude": -37.8136,
+    "longitude": 144.9640,
+    "seats": 40
+  },
+  {
+    "id": 2,
+    "name": "B",
+    "latitude": -37.8105,
+    "longitude": 144.9631,
+    "seats": 25
+  },
+  {
+    "id": 3,
+    "name": "C",
+    "latitude": -37.8297,
+    "longitude": 144.9578,
+    "seats": 50
+  }
+]
