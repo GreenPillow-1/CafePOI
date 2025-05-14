@@ -44,7 +44,7 @@ export default function Home() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Welcome to CaféFinder</Text>
+      <Text style={styles.title}>Welcome to Café & Restaurant Finder</Text>
 
       {/* Search Input */}
       <TextInput
