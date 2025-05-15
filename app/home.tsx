@@ -269,7 +269,7 @@ useEffect(() => {
     setNewCafeAddress('');
     setSelectedEmoji('🍩');
     setSelectedLocation(null);
-    Alert.alert('New café added!');
+    Alert.alert('New location added!');
   };
 
   return (
@@ -368,7 +368,7 @@ useEffect(() => {
           </View>
 
           <TouchableOpacity style={styles.addButton} onPress={handleAddCafe}>
-            <Text style={styles.addButtonText}>Add Café</Text>
+            <Text style={styles.addButtonText}>Add new location</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
