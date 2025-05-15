@@ -58,6 +58,7 @@ export default function index() {
           autoCapitalize="none"
           onChangeText={setEmail}
           value={email}
+          placeholderTextColor={"black"}
         />
 
         <TextInput
@@ -75,6 +76,7 @@ export default function index() {
           secureTextEntry
           onChangeText={setPassword}
           value={password}
+          placeholderTextColor={"black"}
         />
 
         <TouchableOpacity
