@@ -28,7 +28,7 @@ export default function Home() {
 
   // User form
   const [newCafeName, setNewCafeName] = useState('');
-  const [newCafeAddress, setNewCafeAddress] = useState('');
+  const [newCafeReview, setNewCafeReview] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
   const emojiOptions = ['☕️', '🍵', '🧋','🥤','🍔', '🍕', '🍣','🍚', '🍜','🍦', '🍩', '🥐', ]; //  emoji options for different types of food/drinks
 
@@ -248,14 +248,14 @@ useEffect(() => {
       return;
     }
 
-    if (!newCafeName.trim() || !newCafeAddress.trim()) {
+    if (!newCafeName.trim() || !newCafeReview.trim()) {
       Alert.alert('Please fill in both the name and address');
       return;
     }
 
     const newCafe: Cafe = {
       name: newCafeName.trim(),
-      address: newCafeAddress.trim(),
+      review: newCafeReview.trim(),
       emoji: selectedEmoji,
       latitude: selectedLocation.latitude,
       longitude: selectedLocation.longitude,
@@ -266,7 +266,7 @@ useEffect(() => {
 
     setUserCafes(prev => [...prev, newCafe]);
     setNewCafeName('');
-    setNewCafeAddress('');
+    setNewCafeReview('');
     setSelectedEmoji('🍩');
     setSelectedLocation(null);
     Alert.alert('New location added!');
@@ -351,8 +351,8 @@ useEffect(() => {
           <TextInput
             style={styles.formInput}
             placeholder="Review"
-            value={newCafeAddress}
-            onChangeText={setNewCafeAddress}
+            value={newCafeReview}
+            onChangeText={setNewCafeReview}
             placeholderTextColor={'black'}
           />
 
