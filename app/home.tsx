@@ -1,10 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Alert, Dimensions,KeyboardAvoidingView,Platform,ScrollView, StyleSheet, Text,TextInput, TouchableOpacity, View,
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Alert, Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
 import MapView, { Callout, MapPressEvent, Marker } from 'react-native-maps';
 // db imports
-import { database } from '../firebase'; 
-import { ref, push, onValue,} from 'firebase/database'; 
+import { onValue, push, ref, } from 'firebase/database';
+import { database } from '/Users/sg/Desktop/CSE3MAD/CafePOI/firebase.js';
 
 
 
