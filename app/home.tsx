@@ -1,18 +1,12 @@
-
-import React, { useRef, useState } from 'react';
-import {
-  Alert,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+import React, { useRef, useState, useEffect } from 'react';
+import { Alert, Dimensions,KeyboardAvoidingView,Platform,ScrollView, StyleSheet, Text,TextInput, TouchableOpacity, View,
 } from 'react-native';
 import MapView, { Callout, MapPressEvent, Marker } from 'react-native-maps';
+// db imports
+import { database } from '../firebase'; 
+import { ref, push, onValue,} from 'firebase/database'; 
+
+
 
 interface Cafe {
   name: string;
@@ -20,6 +14,7 @@ interface Cafe {
   emoji: string;
   latitude: number;
   longitude: number;
+  id? : string;
 }
 
 export default function Home() {
@@ -34,8 +29,10 @@ export default function Home() {
   const [newCafeName, setNewCafeName] = useState('');
   const [newCafeAddress, setNewCafeAddress] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
+  const emojiOptions = ['🍩', '🍔', '🍕', '🍣', '🍜', '🍺', '🍷', '🧁', '🧋']; //  emoji options for different types of food/drinks
 
-  const emojiOptions = ['🍩', '🍔', '🍕', '🍣', '🍜', '🍺', '🍷', '🧁', '🧋'];
+
+
 
 const cafes: Cafe[] = [
   { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️" },
@@ -150,9 +147,23 @@ const cafes: Cafe[] = [
 
 
 ];
+// get the cafes from fb and adding it to usercafe func
+// creating usereffect func
+useEffect(() => {
+  const dbRef = ref(database, 'cafes');
+  const unsubscribe = onValue(dbRef, snapshot => {
+    const data = snapshot.val();
+    const loadedCafes = data
+      ? Object.keys(data).map(key => ({ ...data[key], id: key }))
+      : [];
+    setUserCafes(loadedCafes);
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
   const allCafes = [...cafes, ...userCafes];
-
   const filteredCafes = allCafes.filter((cafe: Cafe) =>
     cafe.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -194,13 +205,14 @@ const cafes: Cafe[] = [
       longitude: selectedLocation.longitude,
     };
 
-    setUserCafes(prev => [...prev, newCafe]);
+    push(ref(database, 'cafes'), newCafe); // addin it to firebase
 
+
+    setUserCafes(prev => [...prev, newCafe]);
     setNewCafeName('');
     setNewCafeAddress('');
     setSelectedEmoji('🍩');
     setSelectedLocation(null);
-
     Alert.alert('New café added!');
   };
 
@@ -215,7 +227,7 @@ const cafes: Cafe[] = [
         {/* Search */}
         <TextInput
           style={styles.searchInput}
-          placeholder="Search cafés..."
+          placeholder="Search cafés or restaurant..."
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholderTextColor="#888"
