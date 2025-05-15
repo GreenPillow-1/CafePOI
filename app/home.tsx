@@ -30,7 +30,7 @@ export default function Home() {
   const [newCafeName, setNewCafeName] = useState('');
   const [newCafeAddress, setNewCafeAddress] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
-  const emojiOptions = ['🍩', '🍔', '🍕', '🍣','🍚', '🍜','🍦', '🥐', '🍵', '🧁', '🧋']; //  emoji options for different types of food/drinks
+  const emojiOptions = ['☕️', '🍵', '🧋','🥤','🍔', '🍕', '🍣','🍚', '🍜','🍦', '🍩', '🥐', ]; //  emoji options for different types of food/drinks
 
 
 
