@@ -15,30 +15,37 @@ import MapView, { Callout, MapPressEvent, Marker } from 'react-native-maps';
 
 interface Cafe {
   name: string;
-  review: string;
+  address: string;
+  emoji: string;
   latitude: number;
   longitude: number;
 }
 
 export default function Home() {
+  const mapRef = useRef<MapView | null>(null);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCafe, setSelectedCafe] = useState<Cafe | null>(null);
   const [userCafes, setUserCafes] = useState<Cafe[]>([]);
-  const [newCafeName, setNewCafeName] = useState('');
-  const [newCafeReview, setNewCafeReview] = useState('');
-  const [newCafeCoords, setNewCafeCoords] = useState<{ lat: number; lng: number } | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
-  const mapRef = useRef<MapView | null>(null);
+  // User form
+  const [newCafeName, setNewCafeName] = useState('');
+  const [newCafeAddress, setNewCafeAddress] = useState('');
+  const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
+
+  const emojiOptions = ['🍩', '🍔', '🍕', '🍣', '🍜', '🍺', '🍷', '🧁', '🧋'];
 
   const cafes: Cafe[] = [
-    { name: "Mack Daddy Soprano", review: "Great bagels!", latitude: -37.81764132, longitude: 144.96386031352995 },
-    { name: "Grand Mercure Hotel", review: "Good breakfast spot", latitude: -37.81773299, longitude: 144.9637651207598 },
-    { name: "C & B", review: "Amazing coffee!", latitude: -37.81529087, longitude: 144.96423478944925 }
+    { name: "Mack Daddy Soprano", address: "313-315 Flinders Ln", emoji: '☕️', latitude: -37.81764132, longitude: 144.96386031 },
+    { name: "Grand Mercure Hotel", address: "321 Flinders Ln", emoji: '☕️', latitude: -37.81773299, longitude: 144.96376512 },
+    { name: "Glick's Cakes", address: "325 Flinders Ln", emoji: '☕️', latitude: -37.81775969, longitude: 144.96350046 },
+    { name: "C & B", address: "Little Collins St", emoji: '☕️', latitude: -37.81529087, longitude: 144.96423478 },
   ];
 
   const allCafes = [...cafes, ...userCafes];
 
-  const filteredCafes = allCafes.filter((cafe) =>
+  const filteredCafes = allCafes.filter((cafe: Cafe) =>
     cafe.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -57,63 +64,71 @@ export default function Home() {
 
   const handleMapPress = (event: MapPressEvent) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
-    setNewCafeCoords({ lat: latitude, lng: longitude });
+    setSelectedLocation({ latitude, longitude });
   };
 
   const handleAddCafe = () => {
-    if (!newCafeName.trim() || !newCafeReview.trim() || !newCafeCoords) {
-      Alert.alert('Please tap on the map and fill in all fields');
+    if (!selectedLocation) {
+      Alert.alert('Tap on the map to choose a location first.');
+      return;
+    }
+
+    if (!newCafeName.trim() || !newCafeAddress.trim()) {
+      Alert.alert('Please fill in both the name and address');
       return;
     }
 
     const newCafe: Cafe = {
       name: newCafeName.trim(),
-      review: newCafeReview.trim(),
-      latitude: newCafeCoords.lat,
-      longitude: newCafeCoords.lng,
+      address: newCafeAddress.trim(),
+      emoji: selectedEmoji,
+      latitude: selectedLocation.latitude,
+      longitude: selectedLocation.longitude,
     };
 
     setUserCafes(prev => [...prev, newCafe]);
+
     setNewCafeName('');
-    setNewCafeReview('');
-    setNewCafeCoords(null);
-    Alert.alert('New location added!');
+    setNewCafeAddress('');
+    setSelectedEmoji('🍩');
+    setSelectedLocation(null);
+
+    Alert.alert('New café added!');
   };
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={{ flex: 1 }}
+    >
+      <ScrollView contentContainerStyle={styles.container}>
         <Text style={styles.title}>Café & Restaurant Finder</Text>
 
-        <View style={{ width: '100%' }}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search..."
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholderTextColor="#000"
-          />
+        {/* Search */}
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search cafés..."
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#888"
+        />
 
-          {searchQuery.length > 0 && (
-            <ScrollView style={styles.dropdown}>
-              {filteredCafes.slice(0, 5).map((item, index) => (
-                <TouchableOpacity
-                  key={index}
-                  style={styles.dropdownItem}
-                  onPress={() => handleSelectCafe(item)}
-                >
-                  <Text>{item.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          )}
-        </View>
+        {/* Dropdown */}
+        {searchQuery.length > 0 && (
+          <ScrollView style={styles.dropdown}>
+            {filteredCafes.slice(0, 5).map((item, index) => (
+              <TouchableOpacity key={index} style={styles.dropdownItem} onPress={() => handleSelectCafe(item)}>
+                <Text>{item.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        )}
 
+        {/* Map */}
         <View style={styles.mapWrapper}>
           <MapView
             ref={mapRef}
             style={styles.map}
-            mapType="standard"
             initialRegion={{
               latitude: -37.8176,
               longitude: 144.9638,
@@ -126,46 +141,58 @@ export default function Home() {
               <Marker
                 key={index}
                 coordinate={{ latitude: cafe.latitude, longitude: cafe.longitude }}
-                title={cafe.name}
               >
+                <Text style={{ fontSize: 28 }}>{cafe.emoji}</Text>
                 <Callout>
                   <View style={{ width: 200 }}>
                     <Text style={{ fontWeight: 'bold' }}>{cafe.name}</Text>
-                    <Text>{cafe.review}</Text>
+                    <Text>{cafe.address}</Text>
                   </View>
                 </Callout>
               </Marker>
             ))}
 
-            {newCafeCoords && (
+            {selectedLocation && (
               <Marker
-                coordinate={{ latitude: newCafeCoords.lat, longitude: newCafeCoords.lng }}
+                coordinate={selectedLocation}
                 pinColor="green"
               />
             )}
           </MapView>
         </View>
 
+        {/* Add Café Form */}
         <View style={styles.formWrapper}>
-          <Text style={styles.formTitle}>Add New Place</Text>
-          <Text style={{ marginBottom: 5 }}>Tap the map to choose location</Text>
+          <Text style={styles.formTitle}>Add a New Place</Text>
 
           <TextInput
             style={styles.formInput}
             placeholder="Name"
             value={newCafeName}
             onChangeText={setNewCafeName}
+            placeholderTextColor={'black'}
           />
           <TextInput
-            style={[styles.formInput, { height: 60 }]}
-            placeholder="Your review or comment"
-            value={newCafeReview}
-            onChangeText={setNewCafeReview}
-            multiline
+            style={styles.formInput}
+            placeholder="Review"
+            value={newCafeAddress}
+            onChangeText={setNewCafeAddress}
+            placeholderTextColor={'black'}
           />
 
+          <Text style={{ marginVertical: 8 }}>Pick an icon:</Text>
+          <View style={styles.emojiRow}>
+            {emojiOptions.map((emoji, index) => (
+              <TouchableOpacity key={index} onPress={() => setSelectedEmoji(emoji)}>
+                <Text style={[styles.emojiOption, selectedEmoji === emoji && styles.selectedEmoji]}>
+                  {emoji}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
           <TouchableOpacity style={styles.addButton} onPress={handleAddCafe}>
-            <Text style={styles.addButtonText}>Add to Map</Text>
+            <Text style={styles.addButtonText}>Add Café</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -174,91 +201,101 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: {
+  container: {
     paddingTop: 60,
     paddingBottom: 120,
     paddingHorizontal: 20,
-    backgroundColor: '#D6CABA',
+    backgroundColor: '#F0ECE3',
     alignItems: 'center',
   },
   title: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 25,
-    textAlign: 'center',
-    color: '#333',
+    marginBottom: 15,
   },
   searchInput: {
-    height: 40,
     width: '100%',
-    borderColor: '#E0D3C0',
-    borderWidth: 1,
-    paddingLeft: 10,
-    borderRadius: 10,
-    marginBottom: 5,
-    backgroundColor: '#fff',
-  },
-  dropdown: {
-    backgroundColor: '#fff',
-    maxHeight: 150,
+    height: 40,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 20,
+    paddingLeft: 10,
+    backgroundColor: '#fff',
+    marginBottom: 5,
+  },
+  dropdown: {
+    width: '100%',
+    maxHeight: 150,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    marginBottom: 15,
   },
   dropdownItem: {
     padding: 10,
-    borderBottomColor: '#ddd',
+    borderBottomColor: '#eee',
     borderBottomWidth: 1,
   },
   mapWrapper: {
     width: Dimensions.get('window').width * 0.9,
-    height: Dimensions.get('window').height * 0.55,
-    borderRadius: 20,
+    height: 350,
+    borderRadius: 15,
     overflow: 'hidden',
-    backgroundColor: '#eee',
-    marginTop: 10,
+    marginBottom: 20,
   },
   map: {
     width: '100%',
     height: '100%',
   },
   formWrapper: {
-    marginTop: 20,
     width: '100%',
     backgroundColor: '#fff',
-    padding: 15,
     borderRadius: 10,
+    padding: 15,
     shadowColor: '#000',
     shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 3 },
     shadowRadius: 5,
     elevation: 3,
   },
   formTitle: {
-    fontWeight: 'bold',
     fontSize: 18,
+    fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
     textAlign: 'center',
   },
   formInput: {
     height: 40,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
     borderWidth: 1,
     marginBottom: 10,
     borderRadius: 8,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
+  },
+  emojiRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    justifyContent: 'center',
+  },
+  emojiOption: {
+    fontSize: 28,
+    margin: 5,
+    opacity: 0.5,
+  },
+  selectedEmoji: {
+    opacity: 1,
+    transform: [{ scale: 1.2 }],
   },
   addButton: {
+    marginTop: 15,
     backgroundColor: '#7F6A5E',
     paddingVertical: 12,
     borderRadius: 10,
   },
   addButtonText: {
-    color: '#fff',
     textAlign: 'center',
+    color: '#fff',
     fontWeight: 'bold',
     fontSize: 16,
   },
