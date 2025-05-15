@@ -1,18 +1,12 @@
-
-import React, { useRef, useState } from 'react';
-import {
-  Alert,
-  Dimensions,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+import React, { useRef, useState, useEffect } from 'react';
+import { Alert, Dimensions,KeyboardAvoidingView,Platform,ScrollView, StyleSheet, Text,TextInput, TouchableOpacity, View,
 } from 'react-native';
 import MapView, { Callout, MapPressEvent, Marker } from 'react-native-maps';
+// db imports
+import { database } from '../firebase'; 
+import { ref, push, onValue,} from 'firebase/database'; 
+
+
 
 interface Cafe {
   name: string;
@@ -20,6 +14,7 @@ interface Cafe {
   emoji: string;
   latitude: number;
   longitude: number;
+  id? : string;
 }
 
 export default function Home() {
@@ -34,8 +29,10 @@ export default function Home() {
   const [newCafeName, setNewCafeName] = useState('');
   const [newCafeAddress, setNewCafeAddress] = useState('');
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
+  const emojiOptions = ['🍩', '🍔', '🍕', '🍣', '🍜', '🍺', '🍷', '🧁', '🧋']; //  emoji options for different types of food/drinks
 
-  const emojiOptions = ['🍩', '🍔', '🍕', '🍣', '🍜', '🍺', '🍷', '🧁', '🧋'];
+
+
 
 const cafes: Cafe[] = [
   { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️" },
@@ -76,7 +73,7 @@ const cafes: Cafe[] = [
   { name: "Bluestone", address: "349 Flinders Lane MELBOURNE 3000", latitude: -37.81787421, longitude: 144.9628671327705, emoji: "☕️" },
   { name: "Degani Bakery Cafe", address: "Ground, 353 Flinders Lane MELBOURNE 3000", latitude: -37.81786117, longitude: 144.9627541135865, emoji: "☕️" },
   { name: "Rendezvous Hotels", address: "328 Flinders Street MELBOURNE 3000", latitude: -37.81819655, longitude: 144.96357963298587, emoji: "☕️" },
-    { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
+  { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
   { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
   { name: "C & B", address: "41-43 Little Collins Street MELBOURNE 3000", latitude: -37.81529087, longitude: 144.96423478944925, emoji: "☕️" },
   { name: "Brown Sugar Cafe", address: "25 Little Collins Street MELBOURNE 3000", latitude: -37.81529087, longitude: 144.96423478944925, emoji: "☕️" },
@@ -103,7 +100,7 @@ const cafes: Cafe[] = [
   { name: "Royal Melbourne Hotel", address: "621-633 Bourke Street MELBOURNE 3000", latitude: -37.8168684, longitude: 144.95523720563205, emoji: "☕️" },
   { name: "The Bourke Armoury Cafe", address: "Part Ground, 655 Bourke Street MELBOURNE 3000", latitude: -37.81732136, longitude: 144.9545026234553, emoji: "☕️" },
   { name: "St Arnou", address: "582-584 Little Collins Street MELBOURNE 3000", latitude: -37.81742034, longitude: 144.95536140545556, emoji: "☕️" },
-    { name: "Cafe Diy", address: "Shop 20, 121 William Street MELBOURNE 3000", latitude: -37.81636672, longitude: 144.95782326528942, emoji: "☕️" },
+  { name: "Cafe Diy", address: "Shop 20, 121 William Street MELBOURNE 3000", latitude: -37.81636672, longitude: 144.95782326528942, emoji: "☕️" },
   { name: "Cafenatics Espresso Bar", address: "Shop 18, 121 William Street MELBOURNE 3000", latitude: -37.81636672, longitude: 144.95782326528942, emoji: "☕️" },
   { name: "Cafe Pazzo", address: "Shop 15, 121 William Street MELBOURNE 3000", latitude: -37.81636672, longitude: 144.95782326528942, emoji: "☕️" },
   { name: "St James Take Away Food", address: "Shop 13, 121 William Street MELBOURNE 3000", latitude: -37.81636672, longitude: 144.95782326528942, emoji: "☕️" },
@@ -119,7 +116,7 @@ const cafes: Cafe[] = [
   { name: "Hudsons Coffee", address: "Part Ground, 455 Bourke Street MELBOURNE 3000", latitude: -37.8152734, longitude: 144.96051681010874, emoji: "☕️" },
   { name: "Basso", address: "Shop 16, 385 Bourke Street MELBOURNE 3000", latitude: -37.81493078, longitude: 144.9629309900082, emoji: "☕️" },
   { name: "Delicious Malaysian Cuisine & Vietnam Noodle", address: "Shop 10, 399-403 Bourke Street MELBOURNE 3000", latitude: -37.81513905, longitude: 144.96220519105626, emoji: "☕️" },
-    { name: "Nutrients Pty Ltd", address: "Shop 10, 399-403 Bourke Street MELBOURNE 3000", latitude: -37.81513905, longitude: 144.96220519105626, emoji: "☕️" },
+  { name: "Nutrients Pty Ltd", address: "Shop 10, 399-403 Bourke Street MELBOURNE 3000", latitude: -37.81513905, longitude: 144.96220519105626, emoji: "☕️" },
   { name: "Sarpinos Pizzeria", address: "Part 399 Bourke Street MELBOURNE 3000", latitude: -37.81513905, longitude: 144.96220519105626, emoji: "☕️" },
   { name: "Cafe 396", address: "396 Little Collins Street MELBOURNE 3000", latitude: -37.81556472, longitude: 144.96154034339344, emoji: "☕️" },
   { name: "Mr Birds Myo", address: "Ground, 384 Little Collins Street MELBOURNE 3000", latitude: -37.81560784, longitude: 144.9617476861053, emoji: "☕️" },
@@ -204,10 +201,24 @@ const cafes: Cafe[] = [
   { name: "Zoe's Fine Foods", address: "Ground , 474 Little Lonsdale Street MELBOURNE 3000", latitude: -37.81301769, longitude: 144.9554222, emoji: "☕️" }
   
 ];
+// get the cafes from fb and adding it to usercafe func
+// creating usereffect func
+useEffect(() => {
+  const dbRef = ref(database, 'cafes');
+  const unsubscribe = onValue(dbRef, snapshot => {
+    const data = snapshot.val();
+    const loadedCafes = data
+      ? Object.keys(data).map(key => ({ ...data[key], id: key }))
+      : [];
+    setUserCafes(loadedCafes);
+  });
+
+  return () => unsubscribe();
+}, []);
+
 
 
   const allCafes = [...cafes, ...userCafes];
-
   const filteredCafes = allCafes.filter((cafe: Cafe) =>
     cafe.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -249,13 +260,14 @@ const cafes: Cafe[] = [
       longitude: selectedLocation.longitude,
     };
 
-    setUserCafes(prev => [...prev, newCafe]);
+    push(ref(database, 'cafes'), newCafe); // addin it to firebase
 
+
+    setUserCafes(prev => [...prev, newCafe]);
     setNewCafeName('');
     setNewCafeAddress('');
     setSelectedEmoji('🍩');
     setSelectedLocation(null);
-
     Alert.alert('New café added!');
   };
 
@@ -270,7 +282,7 @@ const cafes: Cafe[] = [
         {/* Search */}
         <TextInput
           style={styles.searchInput}
-          placeholder="Search cafés..."
+          placeholder="Search cafés or restaurant..."
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholderTextColor="#888"
