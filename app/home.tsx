@@ -76,7 +76,7 @@ const cafes: Cafe[] = [
   { name: "Bluestone", address: "349 Flinders Lane MELBOURNE 3000", latitude: -37.81787421, longitude: 144.9628671327705, emoji: "☕️" },
   { name: "Degani Bakery Cafe", address: "Ground, 353 Flinders Lane MELBOURNE 3000", latitude: -37.81786117, longitude: 144.9627541135865, emoji: "☕️" },
   { name: "Rendezvous Hotels", address: "328 Flinders Street MELBOURNE 3000", latitude: -37.81819655, longitude: 144.96357963298587, emoji: "☕️" },
-    { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
+  { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
   { name: "Hudsons Coffee", address: "84-86 Elizabeth Street MELBOURNE 3000", latitude: -37.81591429, longitude: 144.96419158047297, emoji: "☕️" },
   { name: "C & B", address: "41-43 Little Collins Street MELBOURNE 3000", latitude: -37.81529087, longitude: 144.96423478944925, emoji: "☕️" },
   { name: "Brown Sugar Cafe", address: "25 Little Collins Street MELBOURNE 3000", latitude: -37.81529087, longitude: 144.96423478944925, emoji: "☕️" },
