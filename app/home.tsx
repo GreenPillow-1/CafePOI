@@ -5,7 +5,7 @@ import {
 import MapView, { Callout, MapPressEvent, Marker } from 'react-native-maps';
 // db imports
 import { onValue, push, ref, } from 'firebase/database';
-import { database } from '/Users/sg/Desktop/CSE3MAD/CafePOI/firebase.js';
+import { database } from '../firebase';
 
 
 
