@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, ImageBackground } from 'react-native';
+import { Alert, ImageBackground, Text, TextInput, TouchableOpacity, View } from 'react-native';
 // import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'expo-router'
+import { useRouter } from 'expo-router';
 
 
 export default function index() {
