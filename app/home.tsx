@@ -32,11 +32,12 @@ export default function Home() {
   // User form
   const [newCafeName, setNewCafeName] = useState('');
   const [newCafeReview, setNewCafeReview] = useState('');
+  const [newcafeAddress,setNewCafeAddress] = useState ('');
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
   const emojiOptions = ['☕️', '🍵', '🧋', '🥤', '🍔', '🍕', '🍣', '🍚', '🍜', '🍦', '🍩', '🥐']; // emoji options
 
   const cafes: Cafe[] = [
-    { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️" },
+    { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️"},
     { name: "Grand Mercure Hotel", address: "321 Flinders Lane MELBOURNE 3000", latitude: -37.81773299, longitude: 144.9637651207598, emoji: "☕️" },
     { name: "Glick's Cakes & Bagels", address: "Part Ground, 325 Flinders Lane MELBOURNE 3000", latitude: -37.81775969, longitude: 144.9635004630143, emoji: "☕️" },
 
@@ -256,6 +257,7 @@ export default function Home() {
     const newCafe: Cafe = {
       name: newCafeName.trim(),
       review: newCafeReview.trim(),
+      address: newcafeAddress.trim(),
       emoji: selectedEmoji,
       latitude: selectedLocation.latitude,
       longitude: selectedLocation.longitude,
@@ -266,6 +268,7 @@ export default function Home() {
     setUserCafes(prev => [...prev, newCafe]);
     setNewCafeName('');
     setNewCafeReview('');
+    setNewCafeAddress('');
     setSelectedEmoji('🍩');
     setSelectedLocation(null);
     Alert.alert('New location added!');
@@ -367,6 +370,13 @@ export default function Home() {
             placeholder="Review"
             value={newCafeReview}
             onChangeText={setNewCafeReview}
+            placeholderTextColor={'black'}
+          />
+            <TextInput
+            style={styles.formInput}
+            placeholder="Address"
+            value={newcafeAddress}
+            onChangeText={setNewCafeAddress}
             placeholderTextColor={'black'}
           />
 
