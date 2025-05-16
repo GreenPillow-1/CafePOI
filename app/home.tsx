@@ -6,11 +6,13 @@ import {
   Pressable,
   ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
+// map import
 import MapView, { MapPressEvent, Marker } from 'react-native-maps';
 // db imports
 import { onValue, push, ref } from 'firebase/database';
 import { database } from '../firebase';
 
+// cafe details to appear on the interface
 interface Cafe {
   name: string;
   address?: string;
@@ -30,17 +32,17 @@ export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   // User form
-  const [newCafeName, setNewCafeName] = useState('');
-  const [newCafeReview, setNewCafeReview] = useState('');
-  const [newcafeAddress,setNewCafeAddress] = useState ('');
+  const [newCafeName, setNewCafeName] = useState(''); // cafe name
+  const [newCafeReview, setNewCafeReview] = useState(''); // cafe review 
+  const [newcafeAddress,setNewCafeAddress] = useState (''); // cafe address 
   const [selectedEmoji, setSelectedEmoji] = useState('🍩'); // default emoji
-  const emojiOptions = ['☕️', '🍵', '🧋', '🥤', '🍔', '🍕', '🍣', '🍚', '🍜', '🍦', '🍩', '🥐']; // emoji options
+  const emojiOptions = ['☕️', '🍵', '🧋', '🥤', '🍔', '🍕', '🍣', '🍚', '🍜', '🍦', '🍩', '🥐']; // emoji options to categorise 
 
+// previous cafe's name, address, latitude, longitude
   const cafes: Cafe[] = [
-    { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️"},
-    { name: "Grand Mercure Hotel", address: "321 Flinders Lane MELBOURNE 3000", latitude: -37.81773299, longitude: 144.9637651207598, emoji: "☕️" },
-    { name: "Glick's Cakes & Bagels", address: "Part Ground, 325 Flinders Lane MELBOURNE 3000", latitude: -37.81775969, longitude: 144.9635004630143, emoji: "☕️" },
-
+  { name: "Mack Daddy Soprano", address: "Unit 1, Basement, 313-315 Flinders Lane MELBOURNE 3000", latitude: -37.81764132, longitude: 144.96386031352995, emoji: "☕️"},
+  { name: "Grand Mercure Hotel", address: "321 Flinders Lane MELBOURNE 3000", latitude: -37.81773299, longitude: 144.9637651207598, emoji: "☕️" },
+  { name: "Glick's Cakes & Bagels", address: "Part Ground, 325 Flinders Lane MELBOURNE 3000", latitude: -37.81775969, longitude: 144.9635004630143, emoji: "☕️" },
   { name: "Pronto On Flinders", address: "Part Ground, 335 Flinders Lane MELBOURNE 3000", latitude: -37.81784851, longitude: 144.96323530453128, emoji: "☕️" },
   { name: "Bluestone", address: "349 Flinders Lane MELBOURNE 3000", latitude: -37.81787421, longitude: 144.9628671327705, emoji: "☕️" },
   { name: "Degani Bakery Cafe", address: "Ground, 353 Flinders Lane MELBOURNE 3000", latitude: -37.81786117, longitude: 144.9627541135865, emoji: "☕️" },
@@ -253,7 +255,7 @@ export default function Home() {
       Alert.alert('Please fill in both the name and review');
       return;
     }
-
+  // new cafe details 
     const newCafe: Cafe = {
       name: newCafeName.trim(),
       review: newCafeReview.trim(),
@@ -280,7 +282,7 @@ export default function Home() {
       style={{ flex: 1 }}
     >
       <ScrollView contentContainerStyle={styles.container}>
-        <Text style={styles.title}>Café & Restaurant Finder</Text>
+        <Text style={styles.title}>Café & Restaurant Finder</Text> 
 
         {/* Search */}
         <TextInput
