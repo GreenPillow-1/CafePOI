@@ -2,6 +2,6 @@ Mohamed Adeeb Mohamed Iqbal: 22065945
 Sahil Gounder: 21708772
 Christopher Gausel: 20961256
 
-Github: https://github.com/GreenPillow-1/gpsPOI.git
+Github: https://github.com/GreenPillow-1/CafePOI.git
 
 
