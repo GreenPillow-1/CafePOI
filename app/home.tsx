@@ -202,6 +202,7 @@ export default function Home() {
   { name: "Schwobs Swiss", address: "Rear Ground , 485 La Trobe Street MELBOURNE 3000", latitude: -37.81270863, longitude: 144.9549321, emoji: "☕️" },
   { name: "Zoe's Fine Foods", address: "Ground , 474 Little Lonsdale Street MELBOURNE 3000", latitude: -37.81301769, longitude: 144.9554222, emoji: "☕️" }
 
+    
   ];
 
   // Fetch cafes from Firebase
